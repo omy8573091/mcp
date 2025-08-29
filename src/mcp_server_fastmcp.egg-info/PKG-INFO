@@ -1,0 +1,81 @@
+Metadata-Version: 2.4
+Name: mcp-server-fastmcp
+Version: 0.1.0
+Summary: Production-ready MCP server using FastMCP
+Author-email: Your Name <you@example.com>
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: fastmcp>=0.4.0
+Requires-Dist: uvicorn[standard]>=0.30.0
+Requires-Dist: pydantic>=2.6
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: orjson>=3.10.0
+Requires-Dist: prometheus-client>=0.20.0
+Requires-Dist: click>=8.1.7
+Requires-Dist: structlog>=24.1.0
+Requires-Dist: opentelemetry-api>=1.27.0
+Requires-Dist: opentelemetry-sdk>=1.27.0
+Requires-Dist: opentelemetry-exporter-otlp>=1.27.0
+Provides-Extra: dev
+Requires-Dist: ruff>=0.5.0; extra == "dev"
+Requires-Dist: mypy>=1.10.0; extra == "dev"
+Requires-Dist: pytest>=8.3.0; extra == "dev"
+
+## MCP Server (FastMCP)
+
+Production-ready [FastMCP] server with stdio and SSE runtimes, structured logging, env config, health checks, and containerization.
+
+### Features
+- Stdio and SSE runtimes via FastMCP
+- Structured JSON logging with `structlog`
+- Env-based configuration
+- Basic health endpoints (healthz/readyz via CLI)
+- Prometheus metrics primitives
+- Dockerfile and Makefile
+
+### Requirements
+- Python 3.9+
+
+### Setup
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -U pip
+pip install -e .[dev]
+```
+
+Copy and adjust environment:
+```bash
+cp .env.example .env || true
+```
+
+### Run (stdio)
+```bash
+mcp-server-stdio
+```
+
+### Run (SSE)
+```bash
+mcp-server-sse  # uses HOST, PORT, AUTH_TOKEN, CORS_ORIGINS
+```
+
+### Health
+```bash
+mcp-server-health
+```
+
+### Docker
+```bash
+docker build -t mcp-server:latest .
+docker run --rm -p 8000:8000 -e AUTH_TOKEN=changeme mcp-server:latest
+```
+
+### Security
+- Set a strong `AUTH_TOKEN` in production for SSE mode
+- Restrict `CORS_ORIGINS` to trusted origins
+- Run the container as non-root (Dockerfile does)
+
+[FastMCP]: https://github.com/fastmcp/FastMCP
+
+

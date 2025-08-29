@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-server-fastmcp"
+version = "0.1.0"
+description = "Production-ready MCP server using FastMCP"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Om Prakash Sharma", email = "omy8573091@gmail.com" }
+]
+dependencies = [
+  "fastmcp>=0.4.0",
+  "uvicorn[standard]>=0.30.0",
+  "pydantic>=2.6",
+  "python-dotenv>=1.0.1",
+  "orjson>=3.10.0",
+  "prometheus-client>=0.20.0",
+  "click>=8.1.7",
+  "structlog>=24.1.0",
+  "opentelemetry-api>=1.27.0",
+  "opentelemetry-sdk>=1.27.0",
+  "opentelemetry-exporter-otlp>=1.27.0",
+  "requests>=2.32.0",
+  "SQLAlchemy>=2.0.30",
+  "psycopg[binary]>=3.2.1",
+  "pgvector>=0.3.3",
+  "openai>=1.40.0",
+  "pandas>=2.2.2",
+  "python-docx>=1.1.2",
+  "pymupdf>=1.24.9",
+  "xlrd>=2.0.1",
+  "PyJWT>=2.9.0",
+  "rank-bm25>=0.2.2",
+  "opentelemetry-instrumentation-requests>=0.47b0",
+  "opentelemetry-instrumentation-sqlalchemy>=0.47b0",
+  "alembic>=1.13.2",
+  "redis>=5.0.7",
+  "rq>=1.16.2",
+  "ragas>=0.1.9",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.5.0",
+  "mypy>=1.10.0",
+  "pytest>=8.3.0",
+]
+
+[project.scripts]
+mcp-server-stdio = "mcp_server.cli:run_stdio"
+mcp-server-sse = "mcp_server.cli:run_sse"
+mcp-server-health = "mcp_server.cli:health_check"
+mcpx = "mcp_client.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["./src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+plugins = []
+

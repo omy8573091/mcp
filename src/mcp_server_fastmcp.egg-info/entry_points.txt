@@ -1,0 +1,4 @@
+[console_scripts]
+mcp-server-health = mcp_server.cli:health_check
+mcp-server-sse = mcp_server.cli:run_sse
+mcp-server-stdio = mcp_server.cli:run_stdio
