@@ -279,45 +279,45 @@ const checkPermission = (user: any, route: string): boolean => {
 };
 
 // Permission-based component access
-export const withPermission = <P extends object>(
-  Component: React.ComponentType<P>,
+export const withPermission = (
+  Component: React.ComponentType<any>,
   requiredPermission: string,
-  fallback?: React.ComponentType<P>
+  fallback?: React.ComponentType<any>
 ) => {
-  return React.forwardRef<any, P>((props, ref) => {
+  return React.forwardRef<any, any>((props, ref) => {
     const user = useAppSelector(state => state.auth?.user);
     const hasPermission = user?.permissions?.includes(requiredPermission) || false;
     
     if (!hasPermission) {
       if (fallback) {
-        return <fallback {...props} ref={ref} />;
+        return React.createElement(fallback, { ...props, ref });
       }
       return null;
     }
     
-    return <Component {...props} ref={ref} />;
+    return React.createElement(Component, { ...props, ref });
   });
 };
 
 // Role-based component access
-export const withRole = <P extends object>(
-  Component: React.ComponentType<P>,
+export const withRole = (
+  Component: React.ComponentType<any>,
   requiredRoles: string[],
-  fallback?: React.ComponentType<P>
+  fallback?: React.ComponentType<any>
 ) => {
-  return React.forwardRef<any, P>((props, ref) => {
+  return React.forwardRef<any, any>((props, ref) => {
     const user = useAppSelector(state => state.auth?.user);
     const userRole = user?.role;
     const hasRole = requiredRoles.includes(userRole);
     
     if (!hasRole) {
       if (fallback) {
-        return <fallback {...props} ref={ref} />;
+        return React.createElement(fallback, { ...props, ref });
       }
       return null;
     }
     
-    return <Component {...props} ref={ref} />;
+    return React.createElement(Component, { ...props, ref });
   });
 };
 

@@ -112,19 +112,19 @@ export const setupGlobalErrorHandling = () => {
 };
 
 // Error boundary middleware for components
-export const withErrorBoundary = <P extends object>(
-  Component: React.ComponentType<P>,
+export const withErrorBoundary = (
+  Component: React.ComponentType<any>,
   errorBoundaryProps?: {
     fallback?: React.ComponentType<{ error: Error; resetError: () => void }>;
     onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
     level?: 'page' | 'component' | 'feature';
   }
 ) => {
-  return React.forwardRef<any, P>((props, ref) => (
-    <ErrorBoundary {...errorBoundaryProps}>
-      <Component {...props} ref={ref} />
-    </ErrorBoundary>
-  ));
+  return React.forwardRef<any, any>((props, ref) => 
+    React.createElement(ErrorBoundary, errorBoundaryProps,
+      React.createElement(Component, { ...props, ref })
+    )
+  );
 };
 
 // Error recovery middleware

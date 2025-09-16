@@ -418,7 +418,9 @@ export const useLogger = () => {
   };
 };
 
-// Cleanup on page unload
-window.addEventListener('beforeunload', () => {
-  logger.destroy();
-});
+// Cleanup on page unload (only in browser)
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', () => {
+    logger.destroy();
+  });
+}

@@ -100,7 +100,9 @@ const authSlice = createSlice({
     },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
-      localStorage.setItem('auth_token', action.payload);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('auth_token', action.payload);
+      }
     },
     clearAuth: (state) => {
       state.user = null;
@@ -108,7 +110,11 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.error = null;
       state.permissions = [];
-      localStorage.removeItem('auth_token');
+      if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth_token');
+        }
+      }
     },
     setPermissions: (state, action: PayloadAction<string[]>) => {
       state.permissions = action.payload;
@@ -117,11 +123,13 @@ const authSlice = createSlice({
       state.error = action.payload;
     },
     initializeAuth: (state) => {
-      const token = localStorage.getItem('auth_token');
-      if (token) {
-        state.token = token;
-        // In a real app, you would validate the token here
-        state.isAuthenticated = true;
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+          state.token = token;
+          // In a real app, you would validate the token here
+          state.isAuthenticated = true;
+        }
       }
     },
   },
@@ -138,7 +146,9 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.isAuthenticated = true;
         state.permissions = action.payload.permissions || [];
-        localStorage.setItem('auth_token', action.payload.token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auth_token', action.payload.token);
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -155,7 +165,9 @@ const authSlice = createSlice({
         state.token = null;
         state.isAuthenticated = false;
         state.permissions = [];
-        localStorage.removeItem('auth_token');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth_token');
+        }
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -169,14 +181,18 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.token = action.payload.token;
         state.isAuthenticated = true;
-        localStorage.setItem('auth_token', action.payload.token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auth_token', action.payload.token);
+        }
       })
       .addCase(refreshToken.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
         state.token = null;
-        localStorage.removeItem('auth_token');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth_token');
+        }
       });
   },
 });

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
-import { FixedSizeList as List } from 'react-window';
-import InfiniteLoader from 'react-window-infinite-loader';
+import { List } from 'react-window';
+import { InfiniteLoader } from 'react-window-infinite-loader';
 import { Box, Typography, Card, CardContent, Chip, CircularProgress } from '@mui/material';
 import type { Document } from '../store/slices/documentsSlice';
 

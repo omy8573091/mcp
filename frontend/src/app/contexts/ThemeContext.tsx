@@ -1,9 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import { lightTheme, darkTheme } from '../theme';
 
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -13,9 +10,9 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const useTheme = (): ThemeContextType => {
+export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
@@ -25,29 +22,27 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    // Check localStorage first, then system preference
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme');
-      if (saved) {
-        return saved === 'dark';
-      }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+export const ThemeContextProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    // Check localStorage first
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      // Check system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDarkMode(prefersDark);
     }
-    return false;
-  });
-
-  useEffect(() => {
-    // Save theme preference to localStorage
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
-
-  useEffect(() => {
+    
     // Listen for system theme changes
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
-      // Only update if no user preference is saved
+      // Only update if no saved preference
       if (!localStorage.getItem('theme')) {
         setIsDarkMode(e.matches);
       }
@@ -58,21 +53,24 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   }, []);
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    }
   };
 
   const setTheme = (isDark: boolean) => {
     setIsDarkMode(isDark);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
   };
-
-  const currentTheme = isDarkMode ? darkTheme : lightTheme;
 
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme, setTheme }}>
-      <MuiThemeProvider theme={currentTheme}>
-        <CssBaseline />
-        {children}
-      </MuiThemeProvider>
+      {children}
     </ThemeContext.Provider>
   );
 };
+

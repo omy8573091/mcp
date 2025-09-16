@@ -619,12 +619,15 @@ const languageSlice = createSlice({
       state.error = action.payload;
     },
     initializeLanguage: (state) => {
-      // Initialize language based on browser preference
-      const browserLang = navigator.language.split('-')[0];
-      const supportedLanguages: Language[] = ['en', 'es', 'fr', 'de', 'zh', 'ja', 'ko', 'ar'];
-      if (supportedLanguages.includes(browserLang as Language)) {
-        state.currentLanguage = browserLang as Language;
+      // Initialize language based on browser preference (SSR-safe)
+      if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+        const browserLang = navigator.language.split('-')[0];
+        const supportedLanguages: Language[] = ['en', 'es', 'fr', 'de', 'zh', 'ja', 'ko', 'ar'];
+        if (supportedLanguages.includes(browserLang as Language)) {
+          state.currentLanguage = browserLang as Language;
+        }
       }
+      // Default to English during SSR
     },
   },
 });

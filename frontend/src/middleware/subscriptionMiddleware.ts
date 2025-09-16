@@ -383,16 +383,16 @@ export const selectUsageStats = createSelector(
 );
 
 // HOC for subscription-based component access
-export const withSubscription = <P extends object>(
-  Component: React.ComponentType<P>,
+export const withSubscription = (
+  Component: React.ComponentType<any>,
   options: {
     requiredTier?: SubscriptionTier;
     requiredFeature?: string;
-    fallback?: React.ComponentType<P>;
-    upgradePrompt?: React.ComponentType<P>;
+    fallback?: React.ComponentType<any>;
+    upgradePrompt?: React.ComponentType<any>;
   }
 ) => {
-  return React.forwardRef<any, P>((props, ref) => {
+  return React.forwardRef<any, any>((props, ref) => {
     const subscription = useAppSelector(selectSubscription);
     const hasFeature = useAppSelector(state => 
       selectHasFeature(state, options.requiredFeature || '')
@@ -406,7 +406,7 @@ export const withSubscription = <P extends object>(
       
       if (currentTierIndex < requiredTierIndex) {
         if (options.upgradePrompt) {
-          return <options.upgradePrompt {...props} ref={ref} />;
+          return React.createElement(options.upgradePrompt, { ...props, ref });
         }
         return null;
       }
@@ -415,7 +415,7 @@ export const withSubscription = <P extends object>(
     // Check feature requirement
     if (options.requiredFeature && !hasFeature) {
       if (options.upgradePrompt) {
-        return <options.upgradePrompt {...props} ref={ref} />;
+        return React.createElement(options.upgradePrompt, { ...props, ref });
       }
       return null;
     }
@@ -423,12 +423,12 @@ export const withSubscription = <P extends object>(
     // Check if subscription is active
     if (!subscription?.isActive) {
       if (options.fallback) {
-        return <options.fallback {...props} ref={ref} />;
+        return React.createElement(options.fallback, { ...props, ref });
       }
       return null;
     }
     
-    return <Component {...props} ref={ref} />;
+    return React.createElement(Component, { ...props, ref });
   });
 };
 

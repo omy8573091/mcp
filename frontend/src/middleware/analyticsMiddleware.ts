@@ -99,6 +99,10 @@ const shouldTrackAction = (actionType: string): boolean => {
 
 // Get session ID
 const getSessionId = (): string => {
+  if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+  
   let sessionId = sessionStorage.getItem('analytics_session_id');
   
   if (!sessionId) {
@@ -208,6 +212,10 @@ const trackUserBehavior = (action: any, userId: string) => {
 
 // Get time on page
 const getTimeOnPage = (): number => {
+  if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+    return 0;
+  }
+  
   const startTime = sessionStorage.getItem('page_start_time');
   if (startTime) {
     return Date.now() - parseInt(startTime);
@@ -217,12 +225,20 @@ const getTimeOnPage = (): number => {
 
 // Get scroll depth
 const getScrollDepth = (): number => {
+  if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+    return 0;
+  }
+  
   const scrollDepth = sessionStorage.getItem('scroll_depth');
   return scrollDepth ? parseInt(scrollDepth) : 0;
 };
 
 // Get click count
 const getClickCount = (): number => {
+  if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+    return 0;
+  }
+  
   const clickCount = sessionStorage.getItem('click_count');
   return clickCount ? parseInt(clickCount) : 0;
 };

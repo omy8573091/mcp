@@ -525,6 +525,10 @@ export class ClientSecurityManager {
   // Secure Session Storage
   secureSessionStorage: {
     setItem: (key: string, value: string) => {
+      if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+        return;
+      }
+      
       try {
         const encrypted = btoa(value);
         sessionStorage.setItem(key, encrypted);
@@ -534,6 +538,10 @@ export class ClientSecurityManager {
     },
     
     getItem: (key: string): string | null => {
+      if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+        return null;
+      }
+      
       try {
         const encrypted = sessionStorage.getItem(key);
         if (encrypted) {
@@ -547,6 +555,10 @@ export class ClientSecurityManager {
     },
     
     removeItem: (key: string) => {
+      if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+        return;
+      }
+      
       try {
         sessionStorage.removeItem(key);
       } catch (error) {

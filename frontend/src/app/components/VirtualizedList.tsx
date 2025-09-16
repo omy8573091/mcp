@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { FixedSizeList as List } from 'react-window';
+import { List } from 'react-window';
 import { Box, Typography, Card, CardContent, Chip, Skeleton } from '@mui/material';
 import { useAppSelector } from '../store/hooks';
 import type { Document } from '../store/slices/documentsSlice';

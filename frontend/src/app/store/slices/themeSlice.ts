@@ -41,11 +41,19 @@ const themeSlice = createSlice({
       state.isDarkMode = !state.isDarkMode;
     },
     initializeTheme: (state) => {
-      // Initialize theme based on system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      state.systemPreference = prefersDark ? 'dark' : 'light';
-      if (state.mode === 'auto') {
-        state.isDarkMode = prefersDark;
+      // Initialize theme based on system preference (SSR-safe)
+      if (typeof window !== 'undefined') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        state.systemPreference = prefersDark ? 'dark' : 'light';
+        if (state.mode === 'auto') {
+          state.isDarkMode = prefersDark;
+        }
+      } else {
+        // Default to light mode during SSR
+        state.systemPreference = 'light';
+        if (state.mode === 'auto') {
+          state.isDarkMode = false;
+        }
       }
     },
   },

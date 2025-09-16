@@ -1,7 +1,25 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import { combineReducers } from '@reduxjs/toolkit';
+
+// Create storage that works with SSR
+const createNoopStorage = () => {
+  return {
+    getItem(_key: string) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: string, value: any) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key: string) {
+      return Promise.resolve();
+    },
+  };
+};
+
+const storage = typeof window !== 'undefined' 
+  ? require('redux-persist/lib/storage').default 
+  : createNoopStorage();
 
 // Import middleware
 import {
