@@ -1,0 +1,76 @@
+{
+  "name": "@grc/component-library",
+  "version": "1.0.0",
+  "description": "Reusable component library for GRC applications with hybrid CSS architecture",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "design-system",
+    "tailwind",
+    "scss",
+    "typescript",
+    "storybook"
+  ],
+  "author": "GRC Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "next": ">=13.0.0"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1",
+    "date-fns": "^4.1.0",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@storybook/addon-essentials": "^7.6.0",
+    "@storybook/addon-interactions": "^7.6.0",
+    "@storybook/addon-links": "^7.6.0",
+    "@storybook/blocks": "^7.6.0",
+    "@storybook/nextjs": "^7.6.0",
+    "@storybook/react": "^7.6.0",
+    "@storybook/test": "^7.6.0",
+    "@types/lodash-es": "^4.17.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.5.0",
+    "rollup": "^3.0.0",
+    "rollup-plugin-dts": "^5.0.0",
+    "rollup-plugin-postcss": "^4.0.0",
+    "sass": "^1.92.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/grc-component-library.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/grc-component-library/issues"
+  },
+  "homepage": "https://github.com/your-org/grc-component-library#readme"
+}

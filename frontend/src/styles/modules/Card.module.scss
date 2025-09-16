@@ -1,0 +1,292 @@
+// CSS Module for Card Component
+@import '../variables';
+
+.card {
+  @include card-base;
+  
+  // Variants
+  &.elevated {
+    box-shadow: $shadow-medium;
+  }
+  
+  &.flat {
+    box-shadow: none;
+    border: 1px solid $secondary-200;
+  }
+  
+  &.outlined {
+    box-shadow: none;
+    border: 2px solid $secondary-200;
+  }
+  
+  // Interactive states
+  &.interactive {
+    cursor: pointer;
+    transition: all $transition-duration-200 $transition-timing-function-in-out;
+    
+    &:hover {
+      box-shadow: $shadow-medium;
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  &.clickable {
+    cursor: pointer;
+    transition: all $transition-duration-200 $transition-timing-function-in-out;
+    
+    &:hover {
+      box-shadow: $shadow-soft;
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+  
+  // Sizes
+  &.small {
+    .card__header,
+    .card__body,
+    .card__footer {
+      padding: $spacing-4;
+    }
+  }
+  
+  &.medium {
+    .card__header,
+    .card__body,
+    .card__footer {
+      padding: $spacing-6;
+    }
+  }
+  
+  &.large {
+    .card__header,
+    .card__body,
+    .card__footer {
+      padding: $spacing-8;
+    }
+  }
+  
+  // Sections
+  &__header {
+    padding: $spacing-6;
+    border-bottom: 1px solid $secondary-200;
+    @include flex-between;
+    
+    &.noBorder {
+      border-bottom: none;
+    }
+  }
+  
+  &__body {
+    padding: $spacing-6;
+    
+    &.noPadding {
+      padding: 0;
+    }
+  }
+  
+  &__footer {
+    padding: $spacing-6;
+    border-top: 1px solid $secondary-200;
+    @include flex-between;
+    
+    &.noBorder {
+      border-top: none;
+    }
+  }
+  
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $secondary-900;
+    margin: 0;
+  }
+  
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $secondary-600;
+    margin: $spacing-1 0 0 0;
+  }
+  
+  &__content {
+    color: $secondary-700;
+    line-height: $line-height-relaxed;
+  }
+  
+  &__actions {
+    display: flex;
+    gap: $spacing-2;
+    align-items: center;
+  }
+  
+  // Special card types
+  &.statCard {
+    text-align: center;
+    
+    .card__body {
+      padding: $spacing-8 $spacing-6;
+    }
+    
+    .card__icon {
+      width: 3rem;
+      height: 3rem;
+      margin: 0 auto $spacing-4;
+      color: $primary-600;
+    }
+    
+    .card__value {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      color: $secondary-900;
+      margin: 0;
+    }
+    
+    .card__label {
+      font-size: $font-size-sm;
+      color: $secondary-600;
+      margin: $spacing-1 0 0 0;
+    }
+    
+    .card__change {
+      font-size: $font-size-xs;
+      margin-top: $spacing-2;
+      
+      &.positive {
+        color: $success-600;
+      }
+      
+      &.negative {
+        color: $error-600;
+      }
+    }
+  }
+  
+  &.featureCard {
+    text-align: center;
+    height: 100%;
+    
+    .card__icon {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 auto $spacing-4;
+      color: $primary-600;
+    }
+    
+    .card__title {
+      font-size: $font-size-xl;
+      margin-bottom: $spacing-2;
+    }
+    
+    .card__content {
+      font-size: $font-size-base;
+      margin-bottom: $spacing-6;
+    }
+  }
+  
+  &.productCard {
+    overflow: hidden;
+    
+    .card__image {
+      width: 100%;
+      height: 12rem;
+      object-fit: cover;
+      background-color: $secondary-100;
+    }
+    
+    .card__badge {
+      position: absolute;
+      top: $spacing-4;
+      right: $spacing-4;
+    }
+    
+    .card__price {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $primary-600;
+      margin: $spacing-2 0;
+    }
+    
+    .card__rating {
+      display: flex;
+      align-items: center;
+      gap: $spacing-1;
+      margin: $spacing-2 0;
+    }
+  }
+  
+  // Responsive behavior
+  @include responsive(sm) {
+    &.responsive {
+      .card__header,
+      .card__body,
+      .card__footer {
+        padding: $spacing-4;
+      }
+    }
+  }
+  
+  @include responsive(lg) {
+    &.responsive {
+      .card__header,
+      .card__body,
+      .card__footer {
+        padding: $spacing-6;
+      }
+    }
+  }
+  
+  // Dark mode support
+  @include dark-mode {
+    background-color: $secondary-800;
+    border-color: $secondary-700;
+    
+    .card__header,
+    .card__footer {
+      border-color: $secondary-700;
+    }
+    
+    .card__title {
+      color: $secondary-100;
+    }
+    
+    .card__subtitle {
+      color: $secondary-400;
+    }
+    
+    .card__content {
+      color: $secondary-300;
+    }
+    
+    &.statCard {
+      .card__value {
+        color: $secondary-100;
+      }
+      
+      .card__label {
+        color: $secondary-400;
+      }
+    }
+    
+    &.featureCard {
+      .card__icon {
+        color: $primary-400;
+      }
+    }
+    
+    &.productCard {
+      .card__image {
+        background-color: $secondary-700;
+      }
+      
+      .card__price {
+        color: $primary-400;
+      }
+    }
+  }
+}

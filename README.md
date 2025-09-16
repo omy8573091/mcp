@@ -16,9 +16,12 @@ Production-ready [FastMCP] server and a production-grade client with structured 
 
 ### Setup
 ```bash
+ls -la .venv
 python3 -m venv .venv
-. .venv/bin/activate
-pip install -U pip
+.venv\Scripts\activate
+ python -m pip install --upgrade pip
+# . .venv/bin/activate   for linux
+# pip install -U pip
 pip install -e .[dev]
 ```
 

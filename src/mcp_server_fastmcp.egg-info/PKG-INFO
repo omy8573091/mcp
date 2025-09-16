@@ -2,7 +2,7 @@ Metadata-Version: 2.4
 Name: mcp-server-fastmcp
 Version: 0.1.0
 Summary: Production-ready MCP server using FastMCP
-Author-email: Your Name <you@example.com>
+Author-email: Om Prakash Sharma <omy8573091@gmail.com>
 License: MIT
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
@@ -17,20 +17,38 @@ Requires-Dist: structlog>=24.1.0
 Requires-Dist: opentelemetry-api>=1.27.0
 Requires-Dist: opentelemetry-sdk>=1.27.0
 Requires-Dist: opentelemetry-exporter-otlp>=1.27.0
+Requires-Dist: requests>=2.32.0
+Requires-Dist: SQLAlchemy>=2.0.30
+Requires-Dist: psycopg[binary]>=3.2.1
+Requires-Dist: pgvector>=0.3.3
+Requires-Dist: openai>=1.40.0
+Requires-Dist: pandas>=2.2.2
+Requires-Dist: python-docx>=1.1.2
+Requires-Dist: pymupdf>=1.24.9
+Requires-Dist: xlrd>=2.0.1
+Requires-Dist: PyJWT>=2.9.0
+Requires-Dist: rank-bm25>=0.2.2
+Requires-Dist: opentelemetry-instrumentation-requests>=0.47b0
+Requires-Dist: opentelemetry-instrumentation-sqlalchemy>=0.47b0
+Requires-Dist: alembic>=1.13.2
+Requires-Dist: redis>=5.0.7
+Requires-Dist: rq>=1.16.2
+Requires-Dist: ragas>=0.1.9
 Provides-Extra: dev
 Requires-Dist: ruff>=0.5.0; extra == "dev"
 Requires-Dist: mypy>=1.10.0; extra == "dev"
 Requires-Dist: pytest>=8.3.0; extra == "dev"
 
-## MCP Server (FastMCP)
+## MCP Server (FastMCP) and Client
 
-Production-ready [FastMCP] server with stdio and SSE runtimes, structured logging, env config, health checks, and containerization.
+Production-ready [FastMCP] server and a production-grade client with structured logging, env config, health checks, metrics, and containerization.
 
 ### Features
-- Stdio and SSE runtimes via FastMCP
+- **Server**: Stdio and SSE runtimes via FastMCP, CORS & security headers, token auth, basic rate limiting
+- **Client**: SSE and stdio transports, CLI to list tools/call tools/get resources, structured logs
 - Structured JSON logging with `structlog`
 - Env-based configuration
-- Basic health endpoints (healthz/readyz via CLI)
+- Health endpoints and CLI checks
 - Prometheus metrics primitives
 - Dockerfile and Makefile
 
@@ -71,10 +89,61 @@ docker build -t mcp-server:latest .
 docker run --rm -p 8000:8000 -e AUTH_TOKEN=changeme mcp-server:latest
 ```
 
+### Client CLI
+Environment (SSE example):
+```bash
+export MCP_CLIENT_TRANSPORT=sse
+export MCP_SSE_URL=http://localhost:8000/sse
+export AUTH_TOKEN=changeme  # if server requires it
+```
+
+List tools:
+```bash
+mcpx list-tools
+```
+
+Call tool:
+```bash
+mcpx call-tool add --args '{"a": 1, "b": 2}'
+```
+
+Get resource:
+```bash
+mcpx get-resource time://now
+```
+
+Health check:
+```bash
+mcpx health
+```
+
 ### Security
 - Set a strong `AUTH_TOKEN` in production for SSE mode
 - Restrict `CORS_ORIGINS` to trusted origins
 - Run the container as non-root (Dockerfile does)
+ - Prefer TLS for SSE (`VERIFY_TLS=1`)
+ - Limit client network egress in production and rotate tokens regularly
+
+### RAG (Postgres + pgvector)
+- Set `DATABASE_URL` (or `PG*` envs) and `OPENAI_API_KEY`.
+- Enable `vector` extension in Postgres (the app will attempt to create it).
+
+Ingest files via CLI:
+```bash
+python -m rag.cli ingest path/to/dir path/to/file.pdf
+```
+
+Ask a question via CLI:
+```bash
+python -m rag.cli ask "What does the document say about refunds?"
+```
+
+HTTP endpoints (when server running):
+- `POST /rag/upload` (multipart form with `files`)
+- `POST /rag/query` JSON `{ "question": "..." }`
+
+MCP tool:
+- `rag_ask(question: str) -> str`
 
 [FastMCP]: https://github.com/fastmcp/FastMCP
 

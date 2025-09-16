@@ -1,0 +1,168 @@
+// CSS Module for Button Component
+// This demonstrates how to use CSS modules for component-specific styles
+
+@import '../variables';
+
+.button {
+  @include button-base;
+  
+  // Variants
+  &.primary {
+    background-color: $primary-600;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: $primary-700;
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 2px $primary-500;
+    }
+  }
+  
+  &.secondary {
+    background-color: $secondary-600;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: $secondary-700;
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 2px $secondary-500;
+    }
+  }
+  
+  &.outline {
+    background-color: transparent;
+    color: $secondary-700;
+    border: 1px solid $secondary-300;
+    
+    &:hover:not(:disabled) {
+      background-color: $secondary-50;
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 2px $primary-500;
+    }
+  }
+  
+  &.ghost {
+    background-color: transparent;
+    color: $secondary-700;
+    
+    &:hover:not(:disabled) {
+      background-color: $secondary-100;
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 2px $primary-500;
+    }
+  }
+  
+  &.link {
+    background-color: transparent;
+    color: $primary-600;
+    text-decoration: underline;
+    
+    &:hover:not(:disabled) {
+      color: $primary-700;
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 2px $primary-500;
+    }
+  }
+  
+  // Sizes
+  &.small {
+    padding: $spacing-1.5 $spacing-3;
+    font-size: $font-size-xs;
+  }
+  
+  &.medium {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-sm;
+  }
+  
+  &.large {
+    padding: $spacing-3 $spacing-6;
+    font-size: $font-size-base;
+  }
+  
+  &.extraLarge {
+    padding: $spacing-4 $spacing-8;
+    font-size: $font-size-lg;
+  }
+  
+  // States
+  &.loading {
+    position: relative;
+    color: transparent;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1rem;
+      height: 1rem;
+      margin: -0.5rem 0 0 -0.5rem;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  &.fullWidth {
+    width: 100%;
+  }
+  
+  &.iconOnly {
+    padding: $spacing-2;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  // Icon positioning
+  .icon {
+    &--left {
+      margin-right: $spacing-2;
+    }
+    
+    &--right {
+      margin-left: $spacing-2;
+    }
+    
+    &--only {
+      margin: 0;
+    }
+  }
+  
+  // Dark mode support
+  @include dark-mode {
+    &.outline {
+      color: $secondary-300;
+      border-color: $secondary-600;
+      
+      &:hover:not(:disabled) {
+        background-color: $secondary-700;
+      }
+    }
+    
+    &.ghost {
+      color: $secondary-300;
+      
+      &:hover:not(:disabled) {
+        background-color: $secondary-700;
+      }
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

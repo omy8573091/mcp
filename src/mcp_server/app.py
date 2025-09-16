@@ -10,10 +10,12 @@ from .config import get_settings
 from .logging_config import configure_logging, get_logger
 from .metrics import MCP_REQUESTS, MCP_REQUEST_LATENCY
 from .tools import register_tools
+from grc.tools import register_grc_tools
 from .resources import register_resources
 from .health import healthz, readyz
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from rag.routes import register_rag_routes
+from grc.routes import register_grc_routes
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -32,8 +34,10 @@ def create_app() -> FastMCP:
     app = FastMCP(name="mcp-server-fastmcp")
 
     register_tools(app)
+    register_grc_tools(app)
     register_resources(app)
     register_rag_routes(app)
+    register_grc_routes(app)
 
     logger.info("app_initialized", environment=settings.environment)
 
