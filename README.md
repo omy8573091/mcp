@@ -100,12 +100,32 @@ Ask a question via CLI:
 python -m rag.cli ask "What does the document say about refunds?"
 ```
 
+Query with citations via client:
+```bash
+mcpx rag-query "What does the document say about refunds?" --server http://localhost:8000
+```
+
 HTTP endpoints (when server running):
 - `POST /rag/upload` (multipart form with `files`)
 - `POST /rag/query` JSON `{ "question": "..." }`
+- `GET /rag/chunk/{chunk_id}` (get chunk metadata)
 
 MCP tool:
 - `rag_ask(question: str) -> str`
+
+### OpenTelemetry Tracing
+Enable distributed tracing with:
+```bash
+export OTEL_ENABLE=1
+export OTEL_SERVICE_NAME=mcp-server
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:14268/api/traces
+```
+
+Traces include:
+- RAG ingestion: file parsing, chunking, embedding, DB operations
+- RAG retrieval: vector search, BM25 reranking, context assembly
+- LLM calls: token usage, model info, latency
+- Database operations: SQL queries, connection pooling
 
 [FastMCP]: https://github.com/fastmcp/FastMCP
 

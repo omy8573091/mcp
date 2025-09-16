@@ -26,10 +26,42 @@ from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 from rag.db import ENGINE
 
 
+def _setup_tracing() -> None:
+    """Initialize OpenTelemetry tracing if enabled."""
+    if os.getenv("OTEL_ENABLE", "0") == "1":
+        # Create resource with service info
+        resource = Resource.create({
+            "service.name": os.getenv("OTEL_SERVICE_NAME", "mcp-server"),
+            "service.version": "0.1.0",
+            "deployment.environment": os.getenv("ENVIRONMENT", "production"),
+        })
+        
+        # Set up tracer provider
+        trace.set_tracer_provider(TracerProvider(resource=resource))
+        tracer = trace.get_tracer(__name__)
+        
+        # Set up OTLP exporter if endpoint provided
+        otlp_endpoint = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
+        if otlp_endpoint:
+            otlp_exporter = OTLPSpanExporter(endpoint=otlp_endpoint)
+            span_processor = BatchSpanProcessor(otlp_exporter)
+            trace.get_tracer_provider().add_span_processor(span_processor)
+        
+        # Instrument requests and SQLAlchemy
+        RequestsInstrumentor().instrument()
+        SQLAlchemyInstrumentor().instrument(engine=ENGINE)
+        
+        return tracer
+    return None
+
+
 def create_app() -> FastMCP:
     configure_logging()
     settings = get_settings()
     logger = get_logger(__name__)
+    
+    # Initialize tracing
+    tracer = _setup_tracing()
 
     app = FastMCP(name="mcp-server-fastmcp")
 
